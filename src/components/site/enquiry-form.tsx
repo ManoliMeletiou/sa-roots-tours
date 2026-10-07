@@ -1,9 +1,10 @@
-import { useState, type FormEvent, type ReactNode } from "react";
+import { cloneElement, isValidElement, useState, type FormEvent, type ReactElement, type ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SelectField } from "@/components/ui/select-field";
 import { Textarea } from "@/components/ui/textarea";
+import { OPERATOR_EMAIL } from "@/lib/contact";
 import { saveEnquiry } from "@/lib/enquire";
 import { useLocale } from "@/lib/locale";
 
@@ -43,6 +44,9 @@ export function EnquiryForm() {
   const c = t.enquire;
   const [pending, setPending] = useState(false);
   const [done, setDone] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [mailto, setMailto] = useState("");
+  const [summary, setSummary] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
   const [fields, setFields] = useState<Fields>(emptyFields);
 
@@ -71,6 +75,8 @@ export function EnquiryForm() {
     if (Object.keys(nextErrors).length) return;
 
     setPending(true);
+    const text = enquiryText(fields, c);
+    const href = enquiryMailto(fields.name, text);
     saveEnquiry({
       locale,
       name: fields.name.trim(),
@@ -83,9 +89,15 @@ export function EnquiryForm() {
       travelStyle: fields.travelStyle,
       message: fields.message.trim(),
     });
+    setSummary(text);
+    setMailto(href);
+    setCopied(false);
     setPending(false);
     setFields(emptyFields);
     setDone(true);
+    window.setTimeout(() => {
+      window.location.href = href;
+    }, 50);
   }
 
   if (done) {
@@ -100,13 +112,36 @@ export function EnquiryForm() {
         <p className="mt-3 text-sm leading-relaxed text-ink-soft sm:text-base">
           {c.successBody}
         </p>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+          <Button asChild size="lg" className="w-full sm:w-auto">
+            <a href={mailto}>{c.successSend}</a>
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="lg"
+            className="w-full sm:w-auto"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(summary);
+                setCopied(true);
+              } catch {
+                setCopied(false);
+              }
+            }}
+          >
+            {copied ? c.successCopied : c.successCopy}
+          </Button>
+        </div>
+        <p className="mt-4 text-sm text-ink-soft">{OPERATOR_EMAIL}</p>
         <Button
           type="button"
-          variant="outline"
-          className="mt-6"
+          variant="ghost"
+          className="mt-2"
           onClick={() => {
             setDone(false);
             setErrors({});
+            setCopied(false);
           }}
         >
           {c.successAnother}
@@ -180,7 +215,7 @@ export function EnquiryForm() {
             onChange={(e) => update("groupSize", e.target.value)}
           >
             <option value="" disabled>
-              —
+              {c.choose}
             </option>
             {c.groupOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -197,7 +232,7 @@ export function EnquiryForm() {
             onChange={(e) => update("rooming", e.target.value)}
           >
             <option value="" disabled>
-              —
+              {c.choose}
             </option>
             {c.roomingOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -214,7 +249,7 @@ export function EnquiryForm() {
             onChange={(e) => update("budget", e.target.value)}
           >
             <option value="" disabled>
-              —
+              {c.choose}
             </option>
             {c.budgetOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -231,7 +266,7 @@ export function EnquiryForm() {
             onChange={(e) => update("travelStyle", e.target.value)}
           >
             <option value="" disabled>
-              —
+              {c.choose}
             </option>
             {c.styleOptions.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -268,6 +303,37 @@ export function EnquiryForm() {
   );
 }
 
+function optionLabel(
+  options: { value: string; label: string }[],
+  value: string,
+) {
+  return options.find((option) => option.value === value)?.label ?? value;
+}
+
+function enquiryText(
+  fields: Fields,
+  c: ReturnType<typeof useLocale>["t"]["enquire"],
+) {
+  return [
+    `Name: ${fields.name.trim()}`,
+    `Email: ${fields.email.trim()}`,
+    `Phone: ${fields.phone.trim() || "—"}`,
+    `Timing: ${fields.preferredDates.trim()}`,
+    `Group: ${optionLabel(c.groupOptions, fields.groupSize)}`,
+    `Rooming: ${optionLabel(c.roomingOptions, fields.rooming)}`,
+    `Budget: ${optionLabel(c.budgetOptions, fields.budget)}`,
+    `Style: ${optionLabel(c.styleOptions, fields.travelStyle)}`,
+    "",
+    fields.message.trim() || "No extra note.",
+  ].join("\n");
+}
+
+function enquiryMailto(name: string, text: string) {
+  const subject = encodeURIComponent(`SA Roots Tours enquiry — ${name.trim()}`);
+  const body = encodeURIComponent(text);
+  return `mailto:${OPERATOR_EMAIL}?subject=${subject}&body=${body}`;
+}
+
 function Field({
   id,
   label,
@@ -285,12 +351,21 @@ function Field({
 }) {
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
+  const describedBy =
+    [!error ? hintId : undefined, errorId].filter(Boolean).join(" ") ||
+    undefined;
+  const control = isValidElement(children)
+    ? cloneElement(children as ReactElement<Record<string, unknown>>, {
+        "aria-invalid": error ? true : undefined,
+        "aria-describedby": describedBy,
+      })
+    : children;
   return (
     <div className={className}>
       <Label htmlFor={id} className="mb-1.5">
         {label}
       </Label>
-      {children}
+      {control}
       {hint && !error ? (
         <p id={hintId} className="mt-1.5 text-xs text-muted">
           {hint}

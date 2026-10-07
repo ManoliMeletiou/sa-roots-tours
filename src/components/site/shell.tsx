@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { useEffect } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { Toaster } from "sonner";
@@ -9,8 +10,29 @@ import { cn } from "@/lib/cn";
 import { useLocale } from "@/lib/locale";
 
 export function SiteShell({ children }: { children: ReactNode }) {
+  const { t, locale } = useLocale();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const showBar = pathname !== "/enquire";
+
+  useEffect(() => {
+    const pages = t.meta.pages;
+    const title =
+      pathname === "/"
+        ? pages.home
+        : pathname === "/journey"
+          ? pages.journey
+          : pathname === "/approach"
+            ? pages.approach
+            : pathname === "/practical"
+              ? pages.practical
+              : pathname === "/enquire"
+                ? pages.enquire
+                : pages.missing;
+    document.title = title;
+    document.documentElement.lang = locale;
+    const description = document.querySelector('meta[name="description"]');
+    if (description) description.setAttribute("content", t.meta.description);
+  }, [pathname, locale, t]);
 
   return (
     <div

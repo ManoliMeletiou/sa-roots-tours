@@ -10,7 +10,18 @@ export type DayCopy = {
 };
 
 type Copy = {
-  meta: { title: string; description: string };
+  meta: {
+    title: string;
+    description: string;
+    pages: {
+      home: string;
+      journey: string;
+      approach: string;
+      practical: string;
+      enquire: string;
+      missing: string;
+    };
+  };
   brand: { name: string; mark: string; tagline: string };
   nav: {
     journey: string;
@@ -24,9 +35,11 @@ type Copy = {
   footer: {
     blurb: string;
     explore: string;
+    contact: string;
     notice: string;
     rights: string;
   };
+  missing: { title: string; body: string; home: string };
   home: {
     kicker: string;
     headline: string;
@@ -120,12 +133,16 @@ type Copy = {
     travelStyle: string;
     message: string;
     messageHint: string;
+    choose: string;
     submit: string;
     submitting: string;
     privacy: string;
     notice: string;
     successTitle: string;
     successBody: string;
+    successSend: string;
+    successCopy: string;
+    successCopied: string;
     successAnother: string;
     errors: {
       name: string;
@@ -146,6 +163,14 @@ export const copy: Record<Locale, Copy> = {
       title: "SA Roots Tours",
       description:
         "Small-group Cape Town and Greater Kruger journeys from the Netherlands. Unhurried, hosted, land-only. First departures aimed at March–April 2027.",
+      pages: {
+        home: "SA Roots Tours — Cape Town and Greater Kruger",
+        journey: "The journey — SA Roots Tours",
+        approach: "How we travel — SA Roots Tours",
+        practical: "Price and practicalities — SA Roots Tours",
+        enquire: "Enquire — SA Roots Tours",
+        missing: "Page not found — SA Roots Tours",
+      },
     },
     brand: {
       name: "SA Roots Tours",
@@ -166,9 +191,15 @@ export const copy: Record<Locale, Copy> = {
       blurb:
         "A specialist host for intimate Cape Town and Greater Kruger journeys, designed from the Netherlands and delivered with licensed South African partners.",
       explore: "Explore",
+      contact: "Write to us",
       notice:
         "SA Roots Tours is in pre-launch. This site does not take payments or confirmed bookings. Travel-entry rules can change — recheck official sources before you fly.",
       rights: "SA Roots Tours. Pre-launch planning site.",
+    },
+    missing: {
+      title: "This page is not on the map.",
+      body: "That address does not match a page on this site.",
+      home: "Back to the start",
     },
     home: {
       kicker: "Cape Town · Greater Kruger · from the Netherlands",
@@ -463,7 +494,7 @@ export const copy: Record<Locale, Copy> = {
         },
         {
           title: "A reply",
-          body: "Within two working days, with an honest read on fit and timing. If we are not the right host, we will say so.",
+          body: "Within two working days of your email arriving, with an honest read on fit and timing. If we are not the right host, we will say so.",
         },
         {
           title: "A short call",
@@ -487,15 +518,19 @@ export const copy: Record<Locale, Copy> = {
       travelStyle: "Travel style",
       message: "Anything we should know",
       messageHint: "Pace, mobility, celebrations, dietary needs, or why South Africa, in your words.",
+      choose: "Choose",
       submit: "Send enquiry",
       submitting: "Sending…",
       privacy:
-        "We keep this enquiry to reply to you. We do not share it with suppliers until you ask us to plan a departure, and we never store card details.",
+        "Sending opens your email app with this enquiry, addressed to us. We use it only to reply. We do not take payment on this site, and we never ask for card details here.",
       notice:
         "Submitting this form does not reserve space, take a deposit, or create a travel contract.",
-      successTitle: "Received. We’ll write back.",
+      successTitle: "Your email is ready to send.",
       successBody:
-        "Thank you. Your enquiry is with us. Expect a reply within two working days. If you asked about the March–April 2027 pilot, say so in the follow-up — those dates will open first.",
+        "This form does not deliver on its own. Your mail app should open with the enquiry. Send that email — we reply within two working days of receiving it. If nothing opened, use the button below.",
+      successSend: "Open email to send",
+      successCopy: "Copy the enquiry",
+      successCopied: "Copied",
       successAnother: "Send another enquiry",
       errors: {
         name: "Please add your name.",
@@ -537,6 +572,14 @@ export const copy: Record<Locale, Copy> = {
       title: "SA Roots Tours",
       description:
         "Kleine groepsreizen naar Kaapstad en de Greater Kruger, vanuit Nederland. Rustig, begeleid, alleen het landarrangement. Eerste vertrekken beoogd maart–april 2027.",
+      pages: {
+        home: "SA Roots Tours — Kaapstad en de Greater Kruger",
+        journey: "De reis — SA Roots Tours",
+        approach: "Onze manier — SA Roots Tours",
+        practical: "Prijs en praktisch — SA Roots Tours",
+        enquire: "Aanvraag — SA Roots Tours",
+        missing: "Pagina niet gevonden — SA Roots Tours",
+      },
     },
     brand: {
       name: "SA Roots Tours",
@@ -557,9 +600,15 @@ export const copy: Record<Locale, Copy> = {
       blurb:
         "Een specialist voor intieme reizen naar Kaapstad en de Greater Kruger, ontworpen vanuit Nederland en uitgevoerd met erkende Zuid-Afrikaanse partners.",
       explore: "Ontdek",
+      contact: "Schrijf ons",
       notice:
         "SA Roots Tours is in pre-launch. Deze site neemt geen betalingen of bevestigde boekingen aan. Inreisregels kunnen wijzigen — controleer officiële bronnen voor vertrek.",
       rights: "SA Roots Tours. Pre-launch planningsite.",
+    },
+    missing: {
+      title: "Deze pagina staat niet op de kaart.",
+      body: "Dit adres hoort niet bij een pagina op deze site.",
+      home: "Terug naar het begin",
     },
     home: {
       kicker: "Kaapstad · Greater Kruger · vanuit Nederland",
@@ -854,7 +903,7 @@ export const copy: Record<Locale, Copy> = {
         },
         {
           title: "Een antwoord",
-          body: "Binnen twee werkdagen, met een eerlijke inschatting van fit en timing. Als wij niet de juiste host zijn, zeggen we dat.",
+          body: "Binnen twee werkdagen nadat uw e-mail binnen is, met een eerlijke inschatting van fit en timing. Als wij niet de juiste host zijn, zeggen we dat.",
         },
         {
           title: "Een kort gesprek",
@@ -878,15 +927,19 @@ export const copy: Record<Locale, Copy> = {
       travelStyle: "Reisstijl",
       message: "Wat we nog moeten weten",
       messageHint: "Tempo, mobiliteit, vieringen, dieet, of waarom Zuid-Afrika, in uw woorden.",
+      choose: "Kies",
       submit: "Verstuur aanvraag",
       submitting: "Versturen…",
       privacy:
-        "We bewaren deze aanvraag om u te antwoorden. We delen hem niet met leveranciers tot u ons vraagt een vertrek te plannen, en we slaan nooit kaartgegevens op.",
+        "Versturen opent uw e-mailapp met deze aanvraag, aan ons gericht. We gebruiken hem alleen om te antwoorden. We nemen geen betaling aan op deze site en vragen hier nooit om kaartgegevens.",
       notice:
         "Dit formulier reserveert geen plaats, neemt geen aanbetaling, en sluit geen reisovereenkomst.",
-      successTitle: "Ontvangen. We schrijven terug.",
+      successTitle: "Uw e-mail staat klaar.",
       successBody:
-        "Dank u. Uw aanvraag is binnen. Verwacht binnen twee werkdagen een antwoord. Als u de pilot van maart–april 2027 bedoelde, noem dat in het vervolg — die data gaan als eerste open.",
+        "Dit formulier bezorgt de aanvraag niet vanzelf. Uw e-mailapp zou moeten openen. Verstuur die e-mail — we antwoorden binnen twee werkdagen nadat we hem ontvangen. Opent er niets, gebruik dan de knop hieronder.",
+      successSend: "Open e-mail om te versturen",
+      successCopy: "Kopieer de aanvraag",
+      successCopied: "Gekopieerd",
       successAnother: "Nog een aanvraag sturen",
       errors: {
         name: "Vul uw naam in.",

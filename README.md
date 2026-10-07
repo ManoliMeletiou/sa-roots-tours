@@ -13,4 +13,4 @@ npm run dev
 
 Open http://localhost:8080.
 
-There is no database. Enquiries are saved in the browser only. Supabase is not part of this site.
+There is no database. Sending an enquiry opens the visitor’s email app, addressed to the operator in [src/lib/contact.ts](src/lib/contact.ts). Supabase is not part of this site.

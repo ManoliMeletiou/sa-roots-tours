@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SplatRouteImport } from './routes/$'
 import { Route as ApproachRouteImport } from './routes/approach'
 import { Route as EnquireRouteImport } from './routes/enquire'
 import { Route as JourneyRouteImport } from './routes/journey'
@@ -18,6 +19,11 @@ import { Route as PracticalRouteImport } from './routes/practical'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SplatRoute = SplatRouteImport.update({
+  id: '/$',
+  path: '/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApproachRoute = ApproachRouteImport.update({
@@ -43,6 +49,7 @@ const PracticalRoute = PracticalRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/approach': typeof ApproachRoute
   '/enquire': typeof EnquireRoute
   '/journey': typeof JourneyRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/approach': typeof ApproachRoute
   '/enquire': typeof EnquireRoute
   '/journey': typeof JourneyRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$': typeof SplatRoute
   '/approach': typeof ApproachRoute
   '/enquire': typeof EnquireRoute
   '/journey': typeof JourneyRoute
@@ -65,14 +74,22 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/approach' | '/enquire' | '/journey' | '/practical'
+  fullPaths: '/' | '/$' | '/approach' | '/enquire' | '/journey' | '/practical'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/approach' | '/enquire' | '/journey' | '/practical'
-  id: '__root__' | '/' | '/approach' | '/enquire' | '/journey' | '/practical'
+  to: '/' | '/$' | '/approach' | '/enquire' | '/journey' | '/practical'
+  id:
+    | '__root__'
+    | '/'
+    | '/$'
+    | '/approach'
+    | '/enquire'
+    | '/journey'
+    | '/practical'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SplatRoute: typeof SplatRoute
   ApproachRoute: typeof ApproachRoute
   EnquireRoute: typeof EnquireRoute
   JourneyRoute: typeof JourneyRoute
@@ -86,6 +103,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$': {
+      id: '/$'
+      path: '/$'
+      fullPath: '/$'
+      preLoaderRoute: typeof SplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/approach': {
@@ -121,6 +145,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SplatRoute: SplatRoute,
   ApproachRoute: ApproachRoute,
   EnquireRoute: EnquireRoute,
   JourneyRoute: JourneyRoute,

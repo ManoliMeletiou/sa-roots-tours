@@ -96,7 +96,7 @@ The protea mark in the logo is the inline SVG in `src/components/site/logo.tsx`.
 
 ## Behaviour that must survive a rebuild
 
-- Enquiry form fields: name, email, optional phone, preferred dates, group size, rooming, budget, travel style, message. Validated. Success state thanks the person and says this is not a booking. Submissions stay in `localStorage` under `sa-roots-enquiries`. There is no server inbox.
+- Enquiry form fields: name, email, optional phone, preferred dates, group size, rooming, budget, travel style, message. Validated. Submitting opens the visitor’s email app, addressed to the operator in `src/lib/contact.ts`, with the enquiry in the body. A copy is also kept in `localStorage` under `sa-roots-enquiries`. There is no server inbox and no payment. The success screen must not claim the enquiry has already arrived.
 - Price sketch: range 6–12 guests, step 1, default 8. Per person stays €4,100. Total is guests × 4,100. Format with `nl-NL` or `en-GB` currency, no cents.
 - Journey page: a sticky row of buttons `01`–`10` jumps to `#day-1` … `#day-10`.
 - FAQ items are native `<details>`. The plus is a visible control.

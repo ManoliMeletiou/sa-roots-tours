@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Logo } from "@/components/site/logo";
+import { OPERATOR_EMAIL } from "@/lib/contact";
 import { useLocale } from "@/lib/locale";
 
 export function Footer() {
@@ -43,7 +44,16 @@ export function Footer() {
           </ul>
         </div>
         <div className="md:col-span-4">
-          <p className="text-sm leading-relaxed text-muted">{t.footer.notice}</p>
+          <p className="text-xs font-medium uppercase tracking-widest text-muted">
+            {t.footer.contact}
+          </p>
+          <a
+            href={`mailto:${OPERATOR_EMAIL}`}
+            className="mt-3 inline-flex min-h-11 items-center text-sm hover:text-sage"
+          >
+            {OPERATOR_EMAIL}
+          </a>
+          <p className="mt-4 text-sm leading-relaxed text-muted">{t.footer.notice}</p>
         </div>
       </div>
       <div className="border-t border-border">

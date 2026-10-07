@@ -23,6 +23,15 @@ export const Route = createRootRoute({
         content:
           "Small-group Cape Town and Greater Kruger journeys from the Netherlands. Unhurried, hosted, land-only. First departures aimed at March–April 2027.",
       },
+      { property: "og:title", content: "SA Roots Tours — Cape Town and Greater Kruger" },
+      {
+        property: "og:description",
+        content:
+          "Small-group Cape Town and Greater Kruger journeys from the Netherlands. Unhurried, hosted, land-only. First departures aimed at March–April 2027.",
+      },
+      { property: "og:type", content: "website" },
+      { property: "og:image", content: "/og.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "theme-color", content: "#3E5346" },
     ],
     links: [
